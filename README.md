@@ -45,3 +45,36 @@ questions - É a tabela que armazenar as perguntas que foram feitas aos alunos.
 alternatives - É a tabela que armazenar as alternativas para as perguntas que foram feitas aos alunos.
 
 answers - É a tabela que armazenar as respostas de cada aluno para cada pergunta.
+
+## Requisitos de sistema
+1. Apache2 com mod_rewrite ativo;
+2. PHP 5.5 ou superior;
+3. PDO instalado e configuração para o banco desejado.
+4. Composer instalado para o gerênciamento das dependências.
+
+## Configuração
+1. Entrar no diretório do projeto.
+```
+cd /var/www/html/teste-backend
+```
+2. Instalar as dependências do projeto.
+```
+php composer.phar install
+```
+3. Edite o arquivo "src/settings.php" para configurar o acesso ao banco de dados.
+```
+        'db' => [
+            'sgbd' => 'mysql',
+            'host' => 'localhost',
+            'port' => '3306',
+            'user' => 'root',
+            'pass' => '123',
+            'dbname' => 'desafio',
+        ],
+```
+4. Para acessar a API/JSON utilize o link "http://localhost/teste-backend/public/v1/backend".
+5. Para acessar o frontend, edite a variável url na linha 75 para "http://localhost/teste-backend/public/v1/backend".
+```
+var url = 'http://localhost/teste-backend/public/v1/backend';
+```
+6. Para acessar o frontend utilize o link "http://localhost/teste-backend/public/v1/frontend".

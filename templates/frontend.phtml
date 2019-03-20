@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style type="text/css">
+        .container {
+            max-width: 650px
+        }
+        .regional {
+            color: #1b1e21;
+            background-color: #d6d8d9;
+            border-color: #c6c8ca;
+            border-right: 1px #1b1e21 solid;
+            text-align: center;
+        }
+        .average {
+            color: #1b1e21;
+            background-color: #d6d8d9;
+            border-color: #c6c8ca;
+        }
+    </style>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+
+    <title>Frontend</title>
+</head>
+<body>
+<div class="container">
+    <div class="row justify-content-sm-center">
+        <div class="col-sm-auto">
+            <p class="font-weight-bold"><h3>Relatório</h3></p>
+        </div>
+    </div>
+    <div class="row justify-content-sm-center">
+        <div class="col-sm">
+            <p class="font-weight-bold">Regional</p>
+        </div>
+        <div class="col-sm">
+            <p class="font-weight-bold">Média</p>
+        </div>
+        <div class="col-sm-auto"></div>
+        <div class="col-sm">
+            <p class="font-weight-bold">Regional</p>
+        </div>
+        <div class="col-sm">
+            <p class="font-weight-bold">Média</p>
+        </div>
+    </div>
+    <div id="result">
+    </div>
+    <div class="row justify-content-sm-center">
+        <div class="col-sm-3">
+            <p class="font-weight-bold">Média Nacional</p>
+        </div>
+        <div class="col-sm-3" id="national"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $().ready(function () {
+        var url = 'http://localhost/teste-backend/public/v1/backend';
+        var decimals = 2;
+
+        $.ajax({
+            async: false,
+            url: url,
+            dataType: 'json'
+        })
+            .done(function (data) {
+                var divColumn, divRow, result, national, lastRegional;
+                lastRegional = false;
+                result = $('#result');
+                national = $('#national');
+
+                result.empty();
+
+                $.each(data.regionals, function (i, regional) {
+                    if (i % 2 == 0) {
+                        divRow = $('<div></div>');
+                        divRow.attr({
+                            'class': 'row justify-content-sm-center'
+                        });
+                        lastRegional = false;
+                    }
+
+                    divColumn = $('<div></div>');
+                    divColumn.attr({
+                        'class': 'col-sm regional'
+                    });
+                    divColumn.text(regional.description);
+                    divRow.append(divColumn);
+
+                    divColumn = $('<div></div>');
+                    divColumn.attr({
+                        'class': 'col-sm average'
+                    });
+                    divColumn.text(parseFloat(regional.average).toFixed(decimals) + '%');
+                    divRow.append(divColumn);
+
+                    if (i % 2 != 0) {
+                        result.append(divRow);
+                        lastRegional = true;
+                    } else {
+                        divColumn = $('<div></div>');
+                        divColumn.attr({
+                            'class': 'col-sm-auto separator'
+                        });
+                        divColumn.text('');
+                        divRow.append(divColumn);
+                    }
+                });
+
+                if (typeof divRow !== 'undefined' && !lastRegional) {
+                    divColumn = $('<div></div>');
+                    divColumn.attr({
+                        'class': 'col-sm regional'
+                    });
+                    divColumn.text('');
+                    divRow.append(divColumn);
+
+                    divColumn = $('<div></div>');
+                    divColumn.attr({
+                        'class': 'col-sm average'
+                    });
+                    divColumn.text('');
+                    divRow.append(divColumn);
+
+                    result.append(divRow);
+                }
+
+                national.empty();
+                national.text(parseFloat(data.national).toFixed(decimals) + '%');
+            });
+    });
+</script>
+</body>
+</html>
